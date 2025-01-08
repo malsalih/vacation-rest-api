@@ -15,11 +15,12 @@ Route::get('test',function (){return "ok";});
 Route::post('/login', [AuthenticationController::class, 'authenticate']);
 Route::post('/logout', [AuthenticationController::class, 'logout'])->middleware('auth:sanctum');
 Route::get('/user/index', [UserController::class, 'index']);
+Route::post('/user/add', [UserController::class, 'store'])->middleware('auth:sanctum');
 
 //Vacations Routes
 Route::group(['prefix' => 'vacation', 'controller' => VacationController::class, 'middleware' => 'auth:sanctum'], function ()
 {
-    Route::get('/', 'index');
+    Route::get('/', 'index')->can('viewAny', 'App\\Models\Vacation');
     Route::post('new', 'store');
     Route::post('balance/new', 'createBalance');
     Route::post('cancel/{id}', 'cancel');

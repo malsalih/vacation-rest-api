@@ -21,11 +21,15 @@ class VacationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $vacations = Vacation::with(['vacationType', 'user', 'status'])->paginate(5);
+        if (\Auth::user()->can('viewAny', Vacation::class))
+        {
+            $vacations = Vacation::with(['vacationType', 'user', 'status'])->paginate(5);
 
-        return new VacationCollection($vacations);
+            return new VacationCollection($vacations);
+        }
+        return response()->json(['message' => 'unauthorized'], 401);
     }
 
     /**
@@ -88,6 +92,9 @@ class VacationController extends Controller
         {
             return response()->json(["message" => 'لايمكن تحديث حالة الاجازة'], 422);
         }
+
+
+
         $dateDiff = date_diff(Carbon::parse($vacation->start_date), Carbon::parse($vacation->end_date));
         $hours = $dateDiff->h;
         $days = $dateDiff->days + 1;

@@ -2,17 +2,17 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Vacation;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreVacationRequest extends FormRequest
+class StoreUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return \Auth::user()->can('create', Vacation::class);
+        return \Auth::user()->can('create', User::class);
     }
 
     /**
@@ -24,11 +24,6 @@ class StoreVacationRequest extends FormRequest
     {
         return [
             //
-            'vacation_type_id' => 'integer|required|exists:vacation_types,id',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'notes' => 'nullable|string',
-            'response_id' => 'nullable|exists:users,id',
         ];
     }
 }
